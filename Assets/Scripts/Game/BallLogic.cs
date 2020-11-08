@@ -30,8 +30,8 @@ namespace Game
             speed = _startSpeed;
             var randomDirectionAngle = Random.Range(45, 135);
             _direction = Quaternion.Euler(Vector3.forward * randomDirectionAngle) * Vector2.right;
-            rigidBody.velocity = _direction*speed;
             
+            rigidBody.AddForce(_direction*speed, ForceMode2D.Impulse);
         }
         
         public void DisableLogic()
@@ -44,27 +44,15 @@ namespace Game
         private void FixedUpdate()
         {
             if(!_isActive) return;
-            
-            rigidBody.velocity = _direction*speed;
+
+            if (rigidBody.velocity.magnitude > maxSpeed)
+            {
+                rigidBody.velocity = rigidBody.velocity.normalized * maxSpeed;
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.CompareTag(Utility.tags[TagConst.RacketPlatform]))
-            {
-                _direction = Vector2.Reflect(_direction, other.GetContact(0).normal).normalized;
-                _racketPlatform = true;
-            }
-            else _racketPlatform = false;
-
-            _direction = !_racketPlatform? Vector2.Reflect(_direction, other.GetContact(0).normal).normalized : _direction;
-
-            var hit = Physics2D.Raycast(transform.position, _direction);
-            if (hit.collider != null && hit.collider.CompareTag(Utility.tags[TagConst.BlockId]))
-            {
-                hit.collider.gameObject.GetComponent<Block>()?.PlayPanicAnimation();
-            }
-
             if (other.gameObject.CompareTag(Utility.tags[TagConst.BlockId]))
             {
                 speed = Mathf.Min(speed + 20f, maxSpeed);

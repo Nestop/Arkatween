@@ -295,7 +295,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 103311729}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2ee62af9aa5f6d049ab705d8c96d879f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -572,7 +572,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 862200467}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2ee62af9aa5f6d049ab705d8c96d879f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -750,7 +750,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 961950811}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2ee62af9aa5f6d049ab705d8c96d879f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -781,6 +781,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 961950812}
   rigidBody2D: {fileID: 961950817}
+  maxRotationAngle: 35
+  debugValue: 0
 --- !u!50 &961950817
 Rigidbody2D:
   serializedVersion: 4
@@ -849,7 +851,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 1095514113}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2ee62af9aa5f6d049ab705d8c96d879f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1012,7 +1014,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 1284820515}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2ee62af9aa5f6d049ab705d8c96d879f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1195,7 +1197,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 1738229545}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 2ee62af9aa5f6d049ab705d8c96d879f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1620,6 +1622,11 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9009080137655777785, guid: bfb0bf8619ab71b44bae6101d2d4f7d0,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9009080137655777787, guid: bfb0bf8619ab71b44bae6101d2d4f7d0,
         type: 3}
       propertyPath: m_Name
@@ -1633,7 +1640,12 @@ PrefabInstance:
     - target: {fileID: 9009080137655777789, guid: bfb0bf8619ab71b44bae6101d2d4f7d0,
         type: 3}
       propertyPath: speed
-      value: 200
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 9009080137655777789, guid: bfb0bf8619ab71b44bae6101d2d4f7d0,
+        type: 3}
+      propertyPath: maxSpeed
+      value: 600
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bfb0bf8619ab71b44bae6101d2d4f7d0, type: 3}
