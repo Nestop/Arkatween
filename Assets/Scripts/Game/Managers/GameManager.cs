@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using DG.Tweening;
 using Game.Level;
+using Game.Racket;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
@@ -14,6 +15,9 @@ namespace Game.Managers
         public RectTransform LayerFront => layerFront;
         
         public LevelInspector LvlInspector => lvlInspector;
+
+        public RacketController Racket => racket;
+        public BallLogic Ball => ball;
 
         public int MaxBlocksInRow => maxBlocksInRow;
         public int MinBlocksInLevel => minBlocksInLevel;
@@ -30,6 +34,9 @@ namespace Game.Managers
         [SerializeField] private Button buttonPlay;
         [SerializeField] private Animator animatorButtonPlay;
         [SerializeField] private LevelInspector lvlInspector;
+
+        [Header("Game objects")]
+        [SerializeField] private RacketController racket;
         [SerializeField] private BallLogic ball;
 
         [Header("Gameplay Settings")] 

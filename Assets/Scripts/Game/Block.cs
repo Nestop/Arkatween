@@ -1,5 +1,7 @@
 ﻿using System;
 using DG.Tweening;
+using Game.Bonuses;
+using Game.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils.Pool;
@@ -17,10 +19,11 @@ namespace Game
         private int _hp;
         private int _maxHp;
         private Gradient _hpGradient;
+        private BaseBonus _bonus;
 
         public event Action<IDeactivable> ObjectDeactivation;
 
-        public void Initialize(Vector2 position, int hp, int maxHp, Gradient hpGradient)
+        public void Initialize(Vector2 position, int hp, int maxHp, Gradient hpGradient, BaseBonus bonus = null)
         {
             transform.localScale = new Vector3(Width, Height, 0);
             rectTransform.anchoredPosition = position;
@@ -28,6 +31,7 @@ namespace Game
             _maxHp = maxHp;
             _hpGradient = hpGradient;
             image.color = _hpGradient.Evaluate((float)_hp/_maxHp);
+            _bonus = bonus;
         }
 
         public void MakeHit()
@@ -41,7 +45,12 @@ namespace Game
             else
             {
                 transform.DOScaleX(0,1f)
-                    .OnComplete( () => ObjectDeactivation?.Invoke(this));
+                    .OnComplete( () =>
+                    {
+                        if(_bonus != null)
+                            PoolManager.Instance.BonusPool.GetObject().Initialize(transform.position, _bonus);
+                        ObjectDeactivation?.Invoke(this);
+                    });
             }
         }
 

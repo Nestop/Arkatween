@@ -45,10 +45,11 @@ namespace Game.Level
                     var position = new Vector2(
                         _startPosX + _gManager.DistanceBetweenBlocks*j + _blockScale.x * j, 
                         _startPosY - _gManager.DistanceBetweenBlocks*i - _blockScale.y * i);
-                    var blockHp = level.blockMap[i, j].BlockHp;
+                    var blockHp = level.blockMap[i, j].blockHp;
+                    var bonus = level.blockMap[i, j].bonus;
                     
                     var block = PoolManager.Instance.BlockPool.GetObject();
-                    block.Initialize(position, blockHp, _gManager.MaxBlockHp, _gManager.HpGradient);
+                    block.Initialize(position, blockHp, _gManager.MaxBlockHp, _gManager.HpGradient, bonus);
                     block.transform.localScale = _blockScale;
                     block.ObjectDeactivation += GameManager.Instance.CheckWin;
                 }

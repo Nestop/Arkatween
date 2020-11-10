@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Game.Bonuses;
 using Game.Managers;
 using UnityEngine;
 
@@ -55,7 +56,8 @@ namespace Game.Level
                     if (positions.Contains(j))
                     {
                         var blockHp = Random.Range(1, gManager.MaxBlockHp + 1);
-                        levelData.blockMap[i, j] = new BaseBlockConfig(blockHp);
+                        var bonus = BonusProvider.TryGetRandomBonus(0.1f);
+                        levelData.blockMap[i, j] = new BaseBlockConfig(blockHp, bonus);
                     }
                     else
                     {

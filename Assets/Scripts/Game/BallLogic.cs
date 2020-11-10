@@ -45,6 +45,11 @@ namespace Game
         {
             if(!_isActive) return;
 
+            if (rigidBody.velocity.magnitude < speed)
+            {
+                rigidBody.velocity = rigidBody.velocity.normalized * speed;
+            }
+            else
             if (rigidBody.velocity.magnitude > maxSpeed)
             {
                 rigidBody.velocity = rigidBody.velocity.normalized * maxSpeed;
