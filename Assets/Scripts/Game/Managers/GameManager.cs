@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DG.Tweening;
+using Game.Level;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
@@ -11,7 +12,10 @@ namespace Game.Managers
     {
         public RectTransform LayerBack => layerBack;
         public RectTransform LayerFront => layerFront;
+        
         public LevelInspector LvlInspector => lvlInspector;
+
+        public int MaxBlocksInRow => maxBlocksInRow;
         public int MinBlocksInLevel => minBlocksInLevel;
         public int MaxBlocksInLevel => maxBlocksInLevel;
         public int DistanceBetweenBlocks => distanceBetweenBlocks;
@@ -20,12 +24,16 @@ namespace Game.Managers
 
         [SerializeField] private RectTransform layerBack;
         [SerializeField] private RectTransform layerFront;
+        
         [SerializeField] private RectTransform gameZone;
         [SerializeField] private Score labelScore;
         [SerializeField] private Button buttonPlay;
         [SerializeField] private Animator animatorButtonPlay;
         [SerializeField] private LevelInspector lvlInspector;
         [SerializeField] private BallLogic ball;
+
+        [Header("Gameplay Settings")] 
+        [SerializeField] private int maxBlocksInRow = 5;
         [SerializeField] private int minBlocksInLevel = 10;
         [SerializeField] private int maxBlocksInLevel = 40;
         [SerializeField] private int distanceBetweenBlocks = 10;
@@ -49,7 +57,7 @@ namespace Game.Managers
             _scoreCount = 0;
             labelScore.Set(_scoreCount);
             
-            lvlInspector.CreateLevel();
+            lvlInspector.OpenLevel(LevelProvider.CreateRandomLevel());
 
             var o = ball.gameObject;
             var originalScale = o.transform.localScale;
@@ -65,12 +73,12 @@ namespace Game.Managers
             labelScore.Set(++_scoreCount);
             if(PoolManager.Instance.BlockPool.Objects.Any(o => o.isActiveAndEnabled)) return;
             
-            lvlInspector.CreateLevel();
+            lvlInspector.OpenLevel(LevelProvider.CreateRandomLevel());
         }
 
         public void Restart()
         {
-            lvlInspector.DestroyLevel();
+            lvlInspector.CloseLevel();
             animatorButtonPlay.Rebind();
             ball.DisableLogic();
             
