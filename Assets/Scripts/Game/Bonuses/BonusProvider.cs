@@ -9,7 +9,11 @@ namespace Game.Bonuses
         {
             var allBonuses = new List<BaseBonus>()
             {
-                new ExpandRacketBonus()
+                new ExpandRacketBonus(),
+                new NarrowRacketBonus(),
+                new SlowDownBallBonus(),
+                new SpeedUpBallBonus(),
+                new RageBallBonus()
             };
 
             return allBonuses[Random.Range(0, allBonuses.Count)];

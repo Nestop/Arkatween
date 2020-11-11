@@ -51,6 +51,7 @@ namespace Game.Level
                     var block = PoolManager.Instance.BlockPool.GetObject();
                     block.Initialize(position, blockHp, _gManager.MaxBlockHp, _gManager.HpGradient, bonus);
                     block.transform.localScale = _blockScale;
+                    block.OnBlockHit += GameManager.Instance.IncreaseScore;
                     block.ObjectDeactivation += GameManager.Instance.CheckWin;
                 }
             }
@@ -63,7 +64,7 @@ namespace Game.Level
         public void CloseLevel()
         {
             rectTransform.DOScaleX(0, 1f).
-                OnComplete(PoolManager.Instance.BlockPool.DeactivateAllObjects);
+                OnComplete( PoolManager.Instance.DeactivateGameObjects);
         }
     }
 }

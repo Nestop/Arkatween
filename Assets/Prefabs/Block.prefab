@@ -115,4 +115,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 9147715854594655086}
+  collider2D: {fileID: 9147715854594655085}
   image: {fileID: 9147715854594655084}

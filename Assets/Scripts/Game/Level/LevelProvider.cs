@@ -56,7 +56,7 @@ namespace Game.Level
                     if (positions.Contains(j))
                     {
                         var blockHp = Random.Range(1, gManager.MaxBlockHp + 1);
-                        var bonus = BonusProvider.TryGetRandomBonus(0.1f);
+                        var bonus = BonusProvider.TryGetRandomBonus(0.3f);
                         levelData.blockMap[i, j] = new BaseBlockConfig(blockHp, bonus);
                     }
                     else

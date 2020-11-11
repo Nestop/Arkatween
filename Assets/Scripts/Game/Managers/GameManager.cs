@@ -75,9 +75,13 @@ namespace Game.Managers
                 .OnComplete(ball.EnableLogic);
         }
 
-        public void CheckWin(IDeactivable obj)
+        public void IncreaseScore()
         {
             labelScore.Set(++_scoreCount);
+        }
+        
+        public void CheckWin(IDeactivable obj)
+        {
             if(PoolManager.Instance.BlockPool.Objects.Any(o => o.isActiveAndEnabled)) return;
             
             lvlInspector.OpenLevel(LevelProvider.CreateRandomLevel());

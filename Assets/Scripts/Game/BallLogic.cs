@@ -1,6 +1,7 @@
 ﻿using Const;
 using Game.Managers;
 using UnityEngine;
+using UnityEngine.UI;
 using Utility = UnityEditorInternal.InternalEditorUtility;
 using Random = UnityEngine.Random;
 
@@ -8,18 +9,25 @@ namespace Game
 {
     public class BallLogic : MonoBehaviour
     {
+        public Image Image => image;
+        public Color OrigColor => _origColor;
+        
         [SerializeField] private float speed = 200;
         [SerializeField] private float maxSpeed = 600;
         [SerializeField] private Rigidbody2D rigidBody;
+        [SerializeField] private Image image;
     
         private Vector2 _direction;
         private float _startSpeed;
+        private float _speedMultiplier = 1f;
         private bool _isActive;
         private bool _racketPlatform;
+        private Color _origColor;
 
         private void Awake()
         {
             _startSpeed = speed;
+            _origColor = image.color;
         }
 
         public void EnableLogic()
@@ -45,15 +53,7 @@ namespace Game
         {
             if(!_isActive) return;
 
-            if (rigidBody.velocity.magnitude < speed)
-            {
-                rigidBody.velocity = rigidBody.velocity.normalized * speed;
-            }
-            else
-            if (rigidBody.velocity.magnitude > maxSpeed)
-            {
-                rigidBody.velocity = rigidBody.velocity.normalized * maxSpeed;
-            }
+            rigidBody.velocity = rigidBody.velocity.normalized * (speed * _speedMultiplier);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -68,6 +68,11 @@ namespace Game
             {
                 GameManager.Instance.Restart();
             }
+        }
+
+        public void SetSpeedMultiplier(float multiplier)
+        {
+            _speedMultiplier = multiplier;
         }
     }
 }

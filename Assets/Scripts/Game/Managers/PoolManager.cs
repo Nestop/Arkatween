@@ -21,5 +21,11 @@ namespace Game.Managers
             BlockPool = new ObjectPool<Block>(levelTransform, blockPrefab, 0, false, true);
             BonusPool = new ObjectPool<BonusTrigger>(levelTransform, bonusPrefab, 0, false, true);
         }
+
+        public void DeactivateGameObjects()
+        {
+            BlockPool.DeactivateAllObjects();
+            BonusPool.DeactivateAllObjects();
+        }
     }
 }
