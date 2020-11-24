@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Game.Managers;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Level
 {
@@ -51,8 +49,6 @@ namespace Game.Level
                     var block = PoolManager.Instance.BlockPool.GetObject();
                     block.Initialize(position, blockHp, _gManager.MaxBlockHp, _gManager.HpGradient, bonus);
                     block.transform.localScale = _blockScale;
-                    block.OnBlockHit += GameManager.Instance.IncreaseScore;
-                    block.ObjectDeactivation += GameManager.Instance.CheckWin;
                 }
             }
             

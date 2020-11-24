@@ -6,27 +6,25 @@ using UnityEngine.UI;
 using Utils.Pool;
 using Utility = UnityEditorInternal.InternalEditorUtility;
 
-namespace Game.Bonuses
+namespace Game.Bonuses.Base
 {
     public class BonusTrigger : MonoBehaviour, IDeactivable
     {
+        private Bonus _bonus;
+
+        [SerializeField] private Image image;
         public event Action<IDeactivable> ObjectDeactivation;
-        
-        [SerializeField] private Image _image;
-        
-        private BaseBonus _bonus;
 
-
-        public void Initialize(Vector3 position, BaseBonus bonus)
+        public void Initialize(Vector3 position, Bonus bonus)
         {
             transform.position = position;
             _bonus = bonus;
 
-            var origColor = _image.color;
-            _image.color = Color.clear;
-            _image.DOColor(origColor, 0.4f);
+            var origColor = image.color;
+            image.color = Color.clear;
+            image.DOColor(origColor, 0.4f);
         }
-        
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.CompareTag(Utility.tags[TagConst.RacketPlatform]))
@@ -34,8 +32,7 @@ namespace Game.Bonuses
                 _bonus?.ActivateBonus();
                 ObjectDeactivation?.Invoke(this);
             }
-            else
-            if (other.gameObject.CompareTag(Utility.tags[TagConst.LoseZoneId]))
+            else if (other.gameObject.CompareTag(Utility.tags[TagConst.LoseZoneId]))
             {
                 ObjectDeactivation?.Invoke(this);
             }
@@ -45,7 +42,7 @@ namespace Game.Bonuses
         {
             var t = transform;
             var p = t.localPosition;
-            p.y -= 100f*Time.deltaTime;
+            p.y -= 100f * Time.deltaTime;
             t.localPosition = p;
         }
     }

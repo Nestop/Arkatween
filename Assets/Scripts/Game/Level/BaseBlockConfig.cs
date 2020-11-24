@@ -1,4 +1,4 @@
-﻿using Game.Bonuses;
+﻿using Game.Bonuses.Base;
 
 namespace Game.Level
 {
@@ -6,9 +6,9 @@ namespace Game.Level
     public class BaseBlockConfig
     {
         public int blockHp;
-        public BaseBonus bonus;
+        public Bonus bonus;
 
-        public BaseBlockConfig(int blockHp, BaseBonus bonus = null)
+        public BaseBlockConfig(int blockHp, Bonus bonus = null)
         {
             this.blockHp = blockHp;
             this.bonus = bonus;

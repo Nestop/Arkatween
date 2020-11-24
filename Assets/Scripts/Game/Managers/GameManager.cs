@@ -1,23 +1,25 @@
-﻿using System.Linq;
-using DG.Tweening;
+﻿using DG.Tweening;
+using Game.Data;
 using Game.Level;
 using Game.Racket;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
-using Utils.Pool;
 
 namespace Game.Managers
 {
     public class GameManager : MBSingleton<GameManager>
     {
         public RectTransform LayerBack => layerBack;
+        public RectTransform LayerMid => layerMid;
         public RectTransform LayerFront => layerFront;
         
+        public Animator AnimatorButtonPlay => animatorButtonPlay;
+
+        public GameData GameData => gameData;
         public LevelInspector LvlInspector => lvlInspector;
 
         public RacketController Racket => racket;
-        public BallLogic Ball => ball;
 
         public int MaxBlocksInRow => maxBlocksInRow;
         public int MinBlocksInLevel => minBlocksInLevel;
@@ -27,17 +29,21 @@ namespace Game.Managers
         public Gradient HpGradient => hpGradient;
 
         [SerializeField] private RectTransform layerBack;
+        [SerializeField] private RectTransform layerMid;
         [SerializeField] private RectTransform layerFront;
         
         [SerializeField] private RectTransform gameZone;
         [SerializeField] private Score labelScore;
         [SerializeField] private Button buttonPlay;
         [SerializeField] private Animator animatorButtonPlay;
+        
+        [SerializeField] private GameRuler gameRuler;
+        [SerializeField] private GameData gameData;
         [SerializeField] private LevelInspector lvlInspector;
 
         [Header("Game objects")]
         [SerializeField] private RacketController racket;
-        [SerializeField] private BallLogic ball;
+        [SerializeField] private Transform ballStartPos;
 
         [Header("Gameplay Settings")] 
         [SerializeField] private int maxBlocksInRow = 5;
@@ -46,13 +52,16 @@ namespace Game.Managers
         [SerializeField] private int distanceBetweenBlocks = 10;
         [SerializeField] private int maxBlockHp = 5;
         [SerializeField] private Gradient hpGradient;
-
-        private Vector3 _ballStartPos;
+        
         private int _scoreCount;
         
         private void Start()
         {
+            gameData.Initialize();
+            GameData.Score.ChangeEvent += labelScore.Show;
+            
             buttonPlay.onClick.AddListener(StartGame);
+            
             var localScale = gameZone.localScale/gameZone.sizeDelta;
             var screenScale = new Vector3(Screen.width, Screen.height, 1f);
             localScale = Vector3.Scale(localScale, screenScale);
@@ -61,41 +70,17 @@ namespace Game.Managers
 
         private void StartGame()
         {
-            _scoreCount = 0;
-            labelScore.Set(_scoreCount);
+            GameData.Score.Set(0);
             
             lvlInspector.OpenLevel(LevelProvider.CreateRandomLevel());
 
+            var ball = PoolManager.Instance.BallPool.GetObject();
             var o = ball.gameObject;
             var originalScale = o.transform.localScale;
-            _ballStartPos = o.transform.localPosition;
+            o.transform.localPosition = ballStartPos.localPosition;
             o.transform.localScale = Vector3.zero;
-            o.SetActive(true);
             o.transform.DOScale(originalScale, 3f)
                 .OnComplete(ball.EnableLogic);
-        }
-
-        public void IncreaseScore()
-        {
-            labelScore.Set(++_scoreCount);
-        }
-        
-        public void CheckWin(IDeactivable obj)
-        {
-            if(PoolManager.Instance.BlockPool.Objects.Any(o => o.isActiveAndEnabled)) return;
-            
-            lvlInspector.OpenLevel(LevelProvider.CreateRandomLevel());
-        }
-
-        public void Restart()
-        {
-            lvlInspector.CloseLevel();
-            animatorButtonPlay.Rebind();
-            ball.DisableLogic();
-            
-            var o = ball.gameObject;
-            o.SetActive(false);
-            o.transform.localPosition = _ballStartPos;
         }
     }
 }

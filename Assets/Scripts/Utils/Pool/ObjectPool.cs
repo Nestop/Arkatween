@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Utils.Pool
 {
     public class ObjectPool<T> : IPool<T> where T : MonoBehaviour
     {
-        private readonly List<T> _objects;
-        private readonly Stack<T> _inactiveObjects;
+        public event Action<T> ObjectCreation;
+        
+        public readonly List<T> Objects;
+        public readonly List<T> ActiveObjects;
+        public readonly Stack<T> InactiveObjects;
+        
         private readonly Transform _container;
         private readonly T _prefab;
         private readonly bool _expandable;
 
-        public List<T> Objects => _objects;
-
-        public ObjectPool(Transform container, T prefab, int poolSize = 0, bool fillAtStart = false, bool expandable = false)
+        public ObjectPool(Transform container, T prefab, int poolSize = 0, bool fillAtStart = false, bool expandable = true)
         {
             var poolContainer = new GameObject($"[Pool]{prefab.gameObject.name}").transform;
             poolContainer.parent = container;
@@ -22,8 +25,9 @@ namespace Utils.Pool
             _container.localPosition = Vector3.zero;
             
             _prefab = prefab;
-            _objects = new List<T>(poolSize);
-            _inactiveObjects = new Stack<T>(poolSize);
+            Objects = new List<T>();
+            ActiveObjects = new List<T>();
+            InactiveObjects = new Stack<T>();
             
             if (fillAtStart && poolSize > 0)
                 for (var i = 0; i < poolSize; i++)
@@ -34,22 +38,25 @@ namespace Utils.Pool
 
         public T GetObject()
         {
-            if (_inactiveObjects.Count == 0) 
+            if (InactiveObjects.Count == 0) 
                 return _expandable ? InitializeObject() : GetActiveObjectStrategy();
             
-            var obj = _inactiveObjects.Pop();
+            var obj = InactiveObjects.Pop();
             obj.gameObject.SetActive(true);
+            ActiveObjects.Add(obj);
             return obj;
         }
 
         private T InitializeObject()
         {
             var obj = Object.Instantiate(_prefab, _container);
-            
+
             if(obj is IDeactivable o) o.ObjectDeactivation += DeactivateObject;
             
-            _objects.Add(obj);
+            Objects.Add(obj);
+            ActiveObjects.Add(obj);
             
+            ObjectCreation?.Invoke(obj);
             return obj;
         }
 
@@ -60,9 +67,8 @@ namespace Utils.Pool
 
         public void DeactivateAllObjects()
         {
-            _inactiveObjects.Clear();
-            
-            foreach (var obj in _objects)
+            var objs = ActiveObjects.ToArray();
+            foreach (var obj in objs)
                 DeactivateObject(obj);
         }
         
@@ -73,10 +79,11 @@ namespace Utils.Pool
         
         private void DeactivateObject(T obj)
         {
-            if (_inactiveObjects.Contains(obj)) return;
+            if (InactiveObjects.Contains(obj)) return;
             
             obj.gameObject.SetActive(false);
-            _inactiveObjects.Push(obj);
+            InactiveObjects.Push(obj);
+            ActiveObjects.Remove(obj);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Const;
 using DG.Tweening;
-using Game.Bonuses;
+using Game.Bonuses.Base;
 using Game.Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +10,7 @@ using Utility = UnityEditorInternal.InternalEditorUtility;
 
 namespace Game
 {
-    public class Block : MonoBehaviour, IDeactivable
+    public class Block : MonoBehaviour, IDeactivable, IHitable
     {
         public const int Width = 80;
         public const int Height = 30;
@@ -26,11 +26,11 @@ namespace Game
         private int _hp;
         private int _maxHp;
         private Gradient _hpGradient;
-        private BaseBonus _bonus;
+        private Bonus _bonus;
 
         public event Action<IDeactivable> ObjectDeactivation;
 
-        public void Initialize(Vector2 position, int hp, int maxHp, Gradient hpGradient, BaseBonus bonus = null)
+        public void Initialize(Vector2 position, int hp, int maxHp, Gradient hpGradient, Bonus bonus = null)
         {
             transform.localScale = new Vector3(Width, Height, 0);
             rectTransform.anchoredPosition = position;
@@ -41,7 +41,7 @@ namespace Game
             _bonus = bonus;
         }
 
-        public void MakeHit()
+        public void MakeHit(object from)
         {
             OnBlockHit?.Invoke();
             
@@ -53,13 +53,14 @@ namespace Game
             }
             else
             {
-                transform.DOScaleX(0,1f)
-                    .OnComplete( () =>
-                    {
-                        if(_bonus != null && _hp == 0)
-                            PoolManager.Instance.BonusPool.GetObject().Initialize(transform.position, _bonus);
-                        ObjectDeactivation?.Invoke(this);
-                    });
+                if(_hp == 0)
+                    transform.DOScaleX(0,1f)
+                        .OnComplete( () =>
+                        {
+                            if(_bonus != null)
+                                PoolManager.Instance.BonusPool.GetObject().Initialize(transform.position, _bonus);
+                            ObjectDeactivation?.Invoke(this);
+                        });
             }
         }
 
@@ -76,7 +77,9 @@ namespace Game
             if (!other.gameObject.CompareTag(Utility.tags[TagConst.Ball])) return;
             
             _hp = 1;
-            MakeHit();
+            MakeHit(other);
         }
+
+        public event Action<IHitable, object> WasHit;
     }
 }

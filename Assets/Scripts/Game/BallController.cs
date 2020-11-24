@@ -1,17 +1,20 @@
-﻿using Const;
-using Game.Managers;
+﻿using System;
+using Const;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils.Pool;
 using Utility = UnityEditorInternal.InternalEditorUtility;
 using Random = UnityEngine.Random;
 
 namespace Game
 {
-    public class BallLogic : MonoBehaviour
+    public class BallController : MonoBehaviour, IDeactivable
     {
+        public event Action<IDeactivable> ObjectDeactivation;
         public Image Image => image;
-        public Color OrigColor => _origColor;
-        
+        public Color OrigColor { get; private set; }
+        public const float OrigSpeedMultiplier = 1f;
+
         [SerializeField] private float speed = 200;
         [SerializeField] private float maxSpeed = 600;
         [SerializeField] private Rigidbody2D rigidBody;
@@ -19,15 +22,14 @@ namespace Game
     
         private Vector2 _direction;
         private float _startSpeed;
-        private float _speedMultiplier = 1f;
+        private float _speedMultiplier = OrigSpeedMultiplier;
         private bool _isActive;
         private bool _racketPlatform;
-        private Color _origColor;
 
         private void Awake()
         {
             _startSpeed = speed;
-            _origColor = image.color;
+            OrigColor = image.color;
         }
 
         public void EnableLogic()
@@ -53,7 +55,7 @@ namespace Game
         {
             if(!_isActive) return;
 
-            rigidBody.velocity = rigidBody.velocity.normalized * (speed * _speedMultiplier);
+            rigidBody.velocity = rigidBody.velocity.normalized * (Mathf.Clamp(speed,200, maxSpeed) * _speedMultiplier);
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -62,11 +64,12 @@ namespace Game
             {
                 speed = Mathf.Min(speed + 20f, maxSpeed);
                 
-                other.gameObject.GetComponent<Block>()?.MakeHit();
+                other.gameObject.GetComponent<IHitable>()?.MakeHit(this);
             }
             else if (other.gameObject.CompareTag(Utility.tags[TagConst.LoseZoneId]))
             {
-                GameManager.Instance.Restart();
+                DisableLogic();
+                ObjectDeactivation?.Invoke(this);
             }
         }
 

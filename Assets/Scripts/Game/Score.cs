@@ -21,7 +21,7 @@ namespace Game
             _originalColor = scoreLabel.color;
         }
 
-        public void Set(int score)
+        public void Show(int score)
         {
             scoreLabel.text = $"Score: {score}";
             PlayAnimation(score);
