@@ -3,21 +3,23 @@ using Const;
 using DG.Tweening;
 using Game.Bonuses.Base;
 using Game.Managers;
+using Game.Rules;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils.Pool;
 using Utility = UnityEditorInternal.InternalEditorUtility;
 
-namespace Game
+namespace Game.Objects
 {
     public class Block : MonoBehaviour, IDeactivable, IHitable
     {
         public const int Width = 80;
         public const int Height = 30;
 
-        public event Action OnBlockHit;
+        public event Action<IHitable, object> HitEvent;
 
         public Collider2D Collider2D => collider2D;
+        public int HP => _hp;
         
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private Collider2D collider2D;
@@ -43,9 +45,13 @@ namespace Game
 
         public void MakeHit(object from)
         {
-            OnBlockHit?.Invoke();
+            GameRules.Instance.CollisionRules.GetCollisionHit(from, this);
+        }
+
+        public void Damage(int value)
+        {
+            _hp -= value;
             
-            _hp--;
             if (_hp > 0)
             {
                 var color = _hpGradient.Evaluate((float) _hp / _maxHp);
@@ -53,7 +59,7 @@ namespace Game
             }
             else
             {
-                if(_hp == 0)
+                if(_hp <= 0)
                     transform.DOScaleX(0,1f)
                         .OnComplete( () =>
                         {
@@ -77,9 +83,7 @@ namespace Game
             if (!other.gameObject.CompareTag(Utility.tags[TagConst.Ball])) return;
             
             _hp = 1;
-            MakeHit(other);
+            MakeHit(other.GetComponent<BallController>());
         }
-
-        public event Action<IHitable, object> WasHit;
     }
 }

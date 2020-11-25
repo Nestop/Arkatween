@@ -1,12 +1,10 @@
 ﻿using System;
-using Const;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils.Pool;
-using Utility = UnityEditorInternal.InternalEditorUtility;
 using Random = UnityEngine.Random;
 
-namespace Game
+namespace Game.Objects
 {
     public class BallController : MonoBehaviour, IDeactivable
     {
@@ -49,6 +47,7 @@ namespace Game
             _isActive = false;
             rigidBody.simulated = false;
             rigidBody.velocity = Vector2.zero;
+            ObjectDeactivation?.Invoke(this);
         }
 
         private void FixedUpdate()
@@ -60,17 +59,12 @@ namespace Game
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.CompareTag(Utility.tags[TagConst.BlockId]))
-            {
-                speed = Mathf.Min(speed + 20f, maxSpeed);
-                
-                other.gameObject.GetComponent<IHitable>()?.MakeHit(this);
-            }
-            else if (other.gameObject.CompareTag(Utility.tags[TagConst.LoseZoneId]))
-            {
-                DisableLogic();
-                ObjectDeactivation?.Invoke(this);
-            }
+            other.gameObject.GetComponent<IHitable>()?.MakeHit(this);
+        }
+
+        public void IncreaseSpeedBy(float value)
+        {
+            speed = Mathf.Min(speed + value, maxSpeed);
         }
 
         public void SetSpeedMultiplier(float multiplier)

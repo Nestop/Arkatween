@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Game.Managers;
+using Game.Objects;
 using UnityEngine;
 
 namespace Game.Level

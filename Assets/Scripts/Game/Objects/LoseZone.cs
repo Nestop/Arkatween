@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Game.Rules;
 using UnityEngine;
 
-namespace Game
+namespace Game.Objects
 {
     public class LoseZone : MonoBehaviour, IHitable
     {
-        public event Action<IHitable, object> WasHit;
-        
         public void MakeHit(object from)
         {
-            WasHit?.Invoke(this, from);
+            GameRules.Instance.CollisionRules.GetCollisionHit(from, this);
         }
     }
 }

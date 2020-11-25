@@ -2,6 +2,7 @@
 using Game.Data;
 using Game.Level;
 using Game.Racket;
+using Game.UI;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
@@ -37,7 +38,6 @@ namespace Game.Managers
         [SerializeField] private Button buttonPlay;
         [SerializeField] private Animator animatorButtonPlay;
         
-        [SerializeField] private GameRuler gameRuler;
         [SerializeField] private GameData gameData;
         [SerializeField] private LevelInspector lvlInspector;
 

@@ -3,7 +3,7 @@ using Game.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game
+namespace Game.UI
 {
     public class Score : MonoBehaviour
     {

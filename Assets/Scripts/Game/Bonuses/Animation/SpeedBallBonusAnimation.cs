@@ -1,5 +1,6 @@
 ﻿using System;
 using DG.Tweening;
+using Game.Objects;
 using UnityEngine;
 
 namespace Game.Bonuses.Animation

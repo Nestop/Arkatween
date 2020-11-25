@@ -1,12 +1,18 @@
 ﻿using Game.Level;
 using Game.Managers;
+using Game.Objects;
 using UnityEngine;
+using Utils;
 using Utils.Pool;
 
-namespace Game
+namespace Game.Rules
 {
-    public class GameRuler : MonoBehaviour
+    public class GameRules : MBSingleton<GameRules>
     {
+        public CollisionRules CollisionRules => collisionRules;
+        
+        [SerializeField] private CollisionRules collisionRules;
+        
         private static GameManager GM => GameManager.Instance;
         private static PoolManager PM => PoolManager.Instance;
 
@@ -21,7 +27,6 @@ namespace Game
         private void SetBlockRules(Block block)
         {
             block.ObjectDeactivation += CheckWin;
-            block.OnBlockHit += IncreaseScore;
         }
         
         private void SetBallRules(BallController ball)
@@ -48,7 +53,6 @@ namespace Game
         
         private void OpenNextLevel()
         {
-            PoolManager.Instance.BonusPool.DeactivateAllObjects();
             GM.LvlInspector.OpenLevel(LevelProvider.CreateRandomLevel());
         }
 
@@ -56,12 +60,6 @@ namespace Game
         {
             GM.LvlInspector.CloseLevel();
             GM.AnimatorButtonPlay.Rebind();
-        }
-        
-        
-        public void IncreaseScore()
-        {
-            GM.GameData.Score.Set(GM.GameData.Score.Value + 1);
         }
     }
 }

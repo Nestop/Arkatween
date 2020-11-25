@@ -2,6 +2,7 @@
 using Game.Bonuses.Base;
 using Game.Bonuses.Config;
 using Game.Managers;
+using Game.Objects;
 
 namespace Game.Bonuses
 {

@@ -1,4 +1,5 @@
 ﻿using Game.Bonuses.Base;
+using Game.Objects;
 using UnityEngine;
 using Utils;
 using Utils.Pool;
