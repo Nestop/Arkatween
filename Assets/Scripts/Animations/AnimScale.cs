@@ -23,7 +23,7 @@ namespace Animations
             Play(scaleMultiplier, duration, loops, loopType);
         }
     
-        public void Play(float scaleMultiplier, float duration, int loops,LoopType loopType)
+        public void Play(float scaleMultiplier, float duration, int loops, LoopType loopType)
         {
             if (_anim.IsActive()) Stop();
         

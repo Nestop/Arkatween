@@ -15,7 +15,7 @@ namespace Game.Bonuses.Base
                 new SpeedBallBonus(new SpeedBallBonusConfig(0.6f, 5f, Color.cyan)),
                 new SpeedBallBonus(new SpeedBallBonusConfig(1.9f, 5f, Color.white)),
                 new RageBallBonus(new SpeedBallBonusConfig(1.5f, 6f, Color.red)),
-                new CloneBallBonus(new CloneBallBonusConfig(2))
+                new CloneBallBonus(new CloneBallBonusConfig(2)),
             };
 
             return allBonuses[Random.Range(0, allBonuses.Count)];

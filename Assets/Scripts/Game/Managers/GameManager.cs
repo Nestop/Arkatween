@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System.Threading;
+using DG.Tweening;
 using Game.Data;
 using Game.Level;
 using Game.Racket;
@@ -54,7 +55,17 @@ namespace Game.Managers
         [SerializeField] private Gradient hpGradient;
         
         private int _scoreCount;
-        
+
+        protected override void OnSingletonAwake()
+        {
+            base.OnSingletonAwake();
+            for (int i = 0; i < 41; i++)
+            {
+                var t = new Thread(o => Debug.Log(PoolManager.Instance.name) );
+                t.Start();
+            }
+        }
+
         private void Start()
         {
             gameData.Initialize();

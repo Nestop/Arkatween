@@ -42,10 +42,11 @@ namespace Utils
 
         private void Awake()
         {
+            OnSingletonAwake();
             if (_instance == null)
             {
                 _instance = this as T;
-                OnSingletonAwake();
+                
             }
             else if (_instance != this)
             {
