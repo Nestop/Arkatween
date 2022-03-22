@@ -8,5 +8,6 @@
         public const int RacketPlatform = 9;
         public const int Ball = 10;
         public const int Enemy = 11;
+        public const int Test = 13;
     }
 }
